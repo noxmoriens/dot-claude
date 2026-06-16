@@ -1,3 +1,7 @@
 *
 !output-styles/
 !output-styles/*
+!rules/
+!rules/*
+!skills/
+!skills/*
