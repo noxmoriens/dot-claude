@@ -3,6 +3,7 @@ paths:
   - "specs/**/*"
   - "SPECS.md"
   - "TASKS.md"
+  - "MEMORY.md"
 ---
 
 # Specs-Driven Development
@@ -54,26 +55,57 @@ Completed work — keep only the 5 most recent entries:
 
 ## Specs alignment (MANDATORY)
 
-Before implementing any task, Claude must read `SPECS.md` and compare the current state of the code against it. This is non-negotiable.
+Before implementing any task, read `SPECS.md` and compare the current state of the code against it. This is non-negotiable.
 
-- If the code, plan, or task does not align with what's documented in `SPECS.md` — **stop immediately**
+- If code, plan, or task does not align with SPECS.md — **stop immediately**
 - Ask the user: "SPECS.md says X, but the current code/task does Y. Why does this differ?"
-- Do NOT proceed with implementation until the discrepancy is resolved
-- If the user confirms a change was intentional (client requirement change, new constraint, etc.), update `SPECS.md` first before continuing
-- Common drift scenarios: client changed requirements mid-development, user updated code without updating specs, new constraints emerged
+- Do NOT proceed until the discrepancy is resolved
+- If the user confirms intentional change, update SPECS.md first before continuing
+- Common drift scenarios: client changed requirements mid-development, user updated code without specs, new constraints emerged
 
-This rule prevents silent drift between what the specs say and what the code does. The spec is the source of truth.
+The spec is the source of truth.
 
-## Workflow
+## Session Start — Fresh Context
 
-1. **Discuss** — align on requirements and approach
-2. **Context sync** — ensure shared understanding
-3. **Read specs** — load SPECS.md and TASKS.md, verify current code aligns with specs
-4. **Plan** — update SPECS.md if requirements changed; otherwise proceed
-5. **Assign tasks** — break into checkboxes in TASKS.md Active section
-6. **Execute** — work through tasks in order
-7. **Code review** — roast the code after all tasks complete
-8. **QA / Unit test** — verify correctness
-9. **Report** — comprehensive summary of what was done
+When starting in a new or cold context, establish context before any code changes:
 
-Move completed tasks from Active to Archive. Move future work from Pending to Active when a new sprint starts.
+1. **Check for specs** — read SPECS.md for requirements and active sprint
+2. **Check MEMORY.md** — persistent project context, past decisions
+3. **Check task list** — understand active sprint vs pending vs archived
+4. **Explore codebase** — quick reconnaissance: language, framework, structure, key entry points
+
+Only proceed once context is established.
+
+## Per-Task Process
+
+Every feature, fix, or change follows these steps in order.
+
+### 1 — Understand
+Explore relevant parts of the codebase. Read impacted files. Map dependencies and data flow. Do not jump to code.
+
+### 2 — Discuss
+Align with the user through conversation or explicit questions. If ambiguous, ask. If conflict with specs, flag it. Outline trade-offs, let user decide. Do not infer requirements silently.
+
+### 3 — Plan
+Break work into atomic tasks under the current Sprint. Each task = one atomic unit ("Add validation to login form", not "Build auth"). Order by dependency — foundations first.
+
+### 4 — Review Tasks
+**STOP HERE.** User reviews, adjusts, reorders, and adds missing items. Do not begin execution until confirmed.
+
+### 5 — Execute
+Work through each task in order. For each:
+1. Read relevant files if not already loaded
+2. Run the decision stack: MUST → EXIST → BREAK → TIGHT → SHIP, in order, no skipping
+3. Run linters and type checks
+4. Commit with conventional commits and signed messages
+
+Do not move to the next task until current one passes all checks.
+
+### 6 — Self Code Review
+After all tasks complete, audit everything you wrote. Be critical. Check requirements, breaking changes, project conventions, TODO/FIXME artifacts. **No code changes during this phase.** Bugs found here are logged, not fixed.
+
+### 7 — Report Findings
+Report what you found: bugs or issues discovered, deviations from plan, suggestions for next sprint. Move completed tasks from Active to Archive. Create a new Sprint for any bugs found.
+
+### 8 — Deliver
+Comprehensive final summary: what was implemented, lints/tests passed, bugs found (assigned next sprint), what's coming next.
